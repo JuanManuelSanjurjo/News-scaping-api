@@ -33,8 +33,8 @@ const papers = [
 const articulos = []
 
 async function scrapeAll(){
-    papers.forEach( paper => {
-        scrapeData(paper, "", " ", articulos)
+    await papers.forEach( paper => {
+         scrapeData(paper, "", " ", articulos)
     })
 }
 function scrapeData(paper, section , topic , container) {
@@ -71,9 +71,9 @@ app.get("/noticias", async (req, res) => {
 
 app.get("/noticias/:paperName/:section/:topic", async (req, res) => {
     const paperName = req.params.paperName
-    const section = req.params.section
-    const topic = req.params.topic
-
+    const section = (req.params.section || "")
+    const topic = (req.params.topic || " "
+)
     const paper = papers.filter(item => item.name == paperName)
     const articulos = []
 
