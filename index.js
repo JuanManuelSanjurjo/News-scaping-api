@@ -1,7 +1,8 @@
-const PORT = 8000
+require('dotenv').config()
 const express = require("express")
 const axios = require("axios")
 const cheerio  = require("cheerio")
+const PORT = process.env.PORT
 
 const app = express()
 
@@ -11,7 +12,6 @@ const papers = [
         name: "infobae",
         url:"https://www.infobae.com/",
         base: "https://www.infobae.com/"
-        
     },
     {
         name: "tn",
