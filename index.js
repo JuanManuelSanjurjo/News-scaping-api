@@ -26,7 +26,7 @@ const papers = [
     {
         name: "telam",
         url:"https://www.telam.com.ar/",
-        base:"https://www.telam.com.a"
+        base:"https://www.telam.com.ar"
     }
 ]
 
@@ -37,7 +37,7 @@ async function scrapeAll(){
          scrapeData(paper, "", " ", articulos)
     })
 }
-function scrapeData(paper, section , topic , container) {
+function scrapeData(paper, section = "", topic = " ", container) {
     return axios.get(`${paper.url}${section}`)
     .then(response => {
         const page = response.data
@@ -69,11 +69,46 @@ app.get("/noticias", async (req, res) => {
     
 })
 
+
+app.get("/noticias/:paperName", async (req, res) => {
+    const paperName = req.params.paperName
+    const section = (req.params.section || "")
+    const topic = (req.params.topic || " ")
+    
+    const paper = papers.filter(item => item.name == paperName)
+    const articulos = []
+    
+    await scrapeData(paper[0], section, topic, articulos)
+    
+    if(articulos.length != 0){
+        res.json(articulos) 
+    }else{
+        res.json("No results for this query")
+    }
+    
+})
+app.get("/noticias/:paperName/:section", async (req, res) => {
+    const paperName = req.params.paperName
+    const section = (req.params.section || "")
+    const topic = (req.params.topic || " ")
+    
+    const paper = papers.filter(item => item.name == paperName)
+    const articulos = []
+    
+    await scrapeData(paper[0], section, topic, articulos)
+    
+    if(articulos.length != 0){
+        res.json(articulos) 
+    }else{
+        res.json("No results for this query")
+    }
+})
+
 app.get("/noticias/:paperName/:section/:topic", async (req, res) => {
     const paperName = req.params.paperName
     const section = (req.params.section || "")
-    const topic = (req.params.topic || " "
-)
+    const topic = (req.params.topic || " ")
+    
     const paper = papers.filter(item => item.name == paperName)
     const articulos = []
 
