@@ -30,10 +30,9 @@ const papers = [
     }
 ]
 
-const articulos = []
-
 async function scrapeAll(){
-    await papers.forEach( paper => {
+    const articulos = []
+    papers.forEach( paper => {
          scrapeData(paper, "", " ", articulos)
     })
 }
@@ -48,10 +47,10 @@ function scrapeData(paper, section = "", topic = " ", container) {
         }).each((i, element) => {
             const title = $(element).text();
             let url = $(element).attr("href");
-            if(!url.startsWith("https")) url = paper.base + url
-            
-            
-            container.push({title, url, source: paper.name });
+            if(url && !url.startsWith("https")) {
+                url = paper.base + url
+                container.push({title, url, source: paper.name });
+            }    
         });
         
     }).catch(err => console.log(err))
@@ -59,14 +58,13 @@ function scrapeData(paper, section = "", topic = " ", container) {
 
 
 app.get("/",  (req, res) => {
-    res.json("Welcome to the politics news hub")
+    res.json("Welcome to the news hub")
 })
 
 
 app.get("/noticias", async (req, res) => {
     await scrapeAll()
     res.json(articulos) 
-    
 })
 
 
@@ -85,8 +83,8 @@ app.get("/noticias/:paperName", async (req, res) => {
     }else{
         res.json("No results for this query")
     }
-    
 })
+
 app.get("/noticias/:paperName/:section", async (req, res) => {
     const paperName = req.params.paperName
     const section = (req.params.section || "")
@@ -119,7 +117,6 @@ app.get("/noticias/:paperName/:section/:topic", async (req, res) => {
     }else{
         res.json("No results for this query")
     }
-
 })
 
 
